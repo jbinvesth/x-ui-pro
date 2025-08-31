@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #################### x-ui-pro v2.4.3 @ github.com/GFW4Fun ##############################################
 [[ $EUID -ne 0 ]] && echo "not root!" && sudo su -
@@ -881,7 +880,7 @@ else
 			"https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install_en.sh"
 		)
 
-	printf 'n\n' | bash <(wget -qO- "${PANEL[$PNLNUM]}")
+	printf 'n\n' | bash <(wget -qO- "${PANEL[$PNLNUM]}") v2.6.6
 	UPDATE_XUIDB
 	if ! systemctl is-enabled --quiet x-ui; then
 		systemctl daemon-reload && systemctl enable x-ui.service
