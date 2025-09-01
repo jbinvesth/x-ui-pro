@@ -572,10 +572,11 @@ shor=($(openssl rand -hex 8) $(openssl rand -hex 8) $(openssl rand -hex 8) $(ope
 UPDATE_XUIDB(){
 if [[ -f $XUIDB ]]; then
         x-ui stop
-        var1=$(/usr/local/x-ui/bin/xray-linux-amd64 x25519)
-        var2=($var1)
-        private_key=${var2[2]}
-        public_key=${var2[5]}
+        output=$(/usr/local/x-ui/bin/xray-linux-amd64 x25519)
+
+        private_key=$(echo "$output" | grep "^PrivateKey:" | awk '{print $2}')
+        public_key=$(echo "$output" | grep "^Password:" | awk '{print $2}')
+
         client_id=$(/usr/local/x-ui/bin/xray-linux-amd64 uuid)
         client_id2=$(/usr/local/x-ui/bin/xray-linux-amd64 uuid)
         client_id3=$(/usr/local/x-ui/bin/xray-linux-amd64 uuid)
