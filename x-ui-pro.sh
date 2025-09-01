@@ -621,7 +621,7 @@ if [[ -f $XUIDB ]]; then
 	     INSERT INTO "settings" ("key", "value") VALUES ("datepicker",  'gregorian');
              INSERT INTO "client_traffics" ("inbound_id","enable","email","up","down","expiry_time","total","reset") VALUES ('1','1','first','0','0','0','0','0');
 	     INSERT INTO "client_traffics" ("inbound_id","enable","email","up","down","expiry_time","total","reset") VALUES ('2','1','first_1','0','0','0','0','0');
-             INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing","allocate") VALUES ( 
+             INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing") VALUES ( 
              '1',
 	     '0',
              '0',
@@ -710,14 +710,9 @@ if [[ -f $XUIDB ]]; then
   ],
   "metadataOnly": false,
   "routeOnly": false
-}',
-'{
-  "strategy": "always",
-  "refresh": 5,
-  "concurrency": 3
 }'
 	     );
-      INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing","allocate") VALUES ( 
+      INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing") VALUES ( 
              '1',
 	     '0',
              '0',
@@ -777,14 +772,9 @@ if [[ -f $XUIDB ]]; then
   ],
   "metadataOnly": false,
   "routeOnly": false
-}',
-'{
-  "strategy": "always",
-  "refresh": 5,
-  "concurrency": 3
 }'
 	     );
-      INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing","allocate") VALUES ( 
+      INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing") VALUES ( 
              '1',
 	     '0',
              '0',
@@ -863,11 +853,6 @@ if [[ -f $XUIDB ]]; then
   ],
   "metadataOnly": false,
   "routeOnly": false
-}',
-'{
-  "strategy": "always",
-  "refresh": 5,
-  "concurrency": 3
 }'
 	     );
 EOF
