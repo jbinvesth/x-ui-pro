@@ -797,7 +797,9 @@ if [[ -f $XUIDB ]]; then
       "enable": true,
       "tgId": "",
       "subId": "first",
-      "reset": 0
+      "reset": 0,
+	  "created_at": 1756726925000,
+      "updated_at": 1756726925000
     }
   ],
   "decryption": "none",
