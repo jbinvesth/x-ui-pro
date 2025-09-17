@@ -668,7 +668,7 @@ if [[ -f $XUIDB ]]; then
   "realitySettings": {
     "show": false,
     "xver": 0,
-    "dest": "${reality_domain}:9443",
+    "target": "${reality_domain}:9443",
     "serverNames": [
       "$reality_domain"
     ],
