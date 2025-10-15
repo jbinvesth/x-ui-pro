@@ -326,6 +326,24 @@ server {
                 proxy_pass http://127.0.0.1:${sub_port};
                 break;
         }
+	location /assets/ {
+                if (\$hack = 1) {return 404;}
+                proxy_redirect off;
+                proxy_set_header Host \$host;
+                proxy_set_header X-Real-IP \$remote_addr;
+                proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                proxy_pass http://127.0.0.1:${sub_port};
+                break;
+        }
+	location /assets {
+                if (\$hack = 1) {return 404;}
+                proxy_redirect off;
+                proxy_set_header Host \$host;
+                proxy_set_header X-Real-IP \$remote_addr;
+                proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                proxy_pass http://127.0.0.1:${sub_port};
+                break;
+        }
 	#Subscription Path (json/fragment)
         location /${json_path} {
                 if (\$hack = 1) {return 404;}
@@ -571,10 +589,11 @@ shor=($(openssl rand -hex 8) $(openssl rand -hex 8) $(openssl rand -hex 8) $(ope
 UPDATE_XUIDB(){
 if [[ -f $XUIDB ]]; then
         x-ui stop
-        var1=$(/usr/local/x-ui/bin/xray-linux-amd64 x25519)
-        var2=($var1)
-        private_key=${var2[2]}
-        public_key=${var2[5]}
+        output=$(/usr/local/x-ui/bin/xray-linux-amd64 x25519)
+
+        private_key=$(echo "$output" | grep "^PrivateKey:" | awk '{print $2}')
+        public_key=$(echo "$output" | grep "^Password:" | awk '{print $2}')
+
         client_id=$(/usr/local/x-ui/bin/xray-linux-amd64 uuid)
         client_id2=$(/usr/local/x-ui/bin/xray-linux-amd64 uuid)
         client_id3=$(/usr/local/x-ui/bin/xray-linux-amd64 uuid)
@@ -620,7 +639,7 @@ if [[ -f $XUIDB ]]; then
 	     INSERT INTO "settings" ("key", "value") VALUES ("datepicker",  'gregorian');
              INSERT INTO "client_traffics" ("inbound_id","enable","email","up","down","expiry_time","total","reset") VALUES ('1','1','first','0','0','0','0','0');
 	     INSERT INTO "client_traffics" ("inbound_id","enable","email","up","down","expiry_time","total","reset") VALUES ('2','1','first_1','0','0','0','0','0');
-             INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing","allocate") VALUES ( 
+             INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing") VALUES ( 
              '1',
 	     '0',
              '0',
@@ -643,7 +662,10 @@ if [[ -f $XUIDB ]]; then
       "enable": true,
       "tgId": "",
       "subId": "first",
-      "reset": 0
+      "reset": 0,
+      "created_at": 1756726925000,
+      "updated_at": 1756726925000
+
     }
   ],
   "decryption": "none",
@@ -663,7 +685,7 @@ if [[ -f $XUIDB ]]; then
   "realitySettings": {
     "show": false,
     "xver": 0,
-    "dest": "${reality_domain}:9443",
+    "target": "${reality_domain}:9443",
     "serverNames": [
       "$reality_domain"
     ],
@@ -706,14 +728,9 @@ if [[ -f $XUIDB ]]; then
   ],
   "metadataOnly": false,
   "routeOnly": false
-}',
-'{
-  "strategy": "always",
-  "refresh": 5,
-  "concurrency": 3
 }'
 	     );
-      INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing","allocate") VALUES ( 
+      INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing") VALUES ( 
              '1',
 	     '0',
              '0',
@@ -736,7 +753,10 @@ if [[ -f $XUIDB ]]; then
       "enable": true,
       "tgId": "",
       "subId": "first",
-      "reset": 0
+      "reset": 0,
+      "created_at": 1756726925000,
+      "updated_at": 1756726925000
+
     }
   ],
   "decryption": "none",
@@ -770,14 +790,9 @@ if [[ -f $XUIDB ]]; then
   ],
   "metadataOnly": false,
   "routeOnly": false
-}',
-'{
-  "strategy": "always",
-  "refresh": 5,
-  "concurrency": 3
 }'
 	     );
-      INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing","allocate") VALUES ( 
+      INSERT INTO "inbounds" ("user_id","up","down","total","remark","enable","expiry_time","listen","port","protocol","settings","stream_settings","tag","sniffing") VALUES ( 
              '1',
 	     '0',
              '0',
@@ -800,7 +815,9 @@ if [[ -f $XUIDB ]]; then
       "enable": true,
       "tgId": "",
       "subId": "first",
-      "reset": 0
+      "reset": 0,
+	  "created_at": 1756726925000,
+      "updated_at": 1756726925000
     }
   ],
   "decryption": "none",
@@ -856,11 +873,6 @@ if [[ -f $XUIDB ]]; then
   ],
   "metadataOnly": false,
   "routeOnly": false
-}',
-'{
-  "strategy": "always",
-  "refresh": 5,
-  "concurrency": 3
 }'
 	     );
 EOF
@@ -994,8 +1006,8 @@ if systemctl is-active --quiet x-ui; then clear
  	echo -e "Username:  ${config_username} \n" 
 	echo -e "Password:  ${config_password} \n" 
 	msg_inf "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-#  msg_inf "Web Sub Page your first client: https://${domain}/${web_path}?name=first\n"
-#  msg_inf "Your local sub2sing-box instance: https://${domain}/$sub2singbox_path/\n"
+    msg_inf "Web Sub Page your first client: https://${domain}/${web_path}?name=first\n"
+    msg_inf "Your local sub2sing-box instance: https://${domain}/$sub2singbox_path/\n"
   msg_inf "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 	msg_inf "Please Save this Screen!!"	
 else
